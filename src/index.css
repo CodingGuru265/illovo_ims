@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 95%;
+    --foreground: 220 15% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 20%;
+
+    --primary: 348 72% 52%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 348 30% 95%;
+    --secondary-foreground: 348 72% 42%;
+
+    --muted: 220 10% 92%;
+    --muted-foreground: 220 10% 45%;
+
+    --accent: 199 80% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 152 60% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+
+    --border: 220 10% 88%;
+    --input: 220 10% 88%;
+    --ring: 348 72% 52%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 10% 45%;
+    --sidebar-primary: 348 72% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 348 30% 96%;
+    --sidebar-accent-foreground: 348 72% 42%;
+    --sidebar-border: 220 10% 90%;
+    --sidebar-ring: 348 72% 52%;
+
+    --font-display: 'JetBrains Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer utilities {
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(348 72% 52% / 0.15), 0 0 60px hsl(348 72% 52% / 0.05);
+  }
+  .glow-danger {
+    box-shadow: 0 0 20px hsl(0 72% 55% / 0.2), 0 0 60px hsl(0 72% 55% / 0.08);
+  }
+  .glow-success {
+    box-shadow: 0 0 20px hsl(152 60% 45% / 0.15), 0 0 60px hsl(152 60% 45% / 0.05);
+  }
+  @keyframes glow-pulse {
+    0%, 100% {
+      box-shadow: 0 0 8px hsl(348 72% 52% / 0.2), 0 0 20px hsl(348 72% 52% / 0.1);
+    }
+    50% {
+      box-shadow: 0 0 16px hsl(348 72% 52% / 0.4), 0 0 40px hsl(348 72% 52% / 0.2);
+    }
+  }
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+}
