@@ -43,7 +43,7 @@ export default function AppLayout({
         <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-xl border-b border-border px-6 py-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="lg:pl-0 pl-12">
-              <h1 className="font-display text-lg font-bold text-primary tracking-wider">
+              <h1 className="font-display text-lg font-bold text-[#006738] tracking-wider">
                 Infrastructure Management System
               </h1>
             </div>
@@ -57,8 +57,8 @@ export default function AppLayout({
           </div>
         </header>
 
-        <div className="bg-primary text-primary-foreground text-center py-2">
-          <p className="text-sm font-medium tracking-wide">
+        <div className="bg-[#006738] text-primary-foreground text-center py-5">
+          <p className="text-md font-medium tracking-wide">
             {getPageBanner(activeNav)}
           </p>
         </div>

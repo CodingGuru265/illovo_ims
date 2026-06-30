@@ -13,10 +13,10 @@ export default function StatsBar() {
   const avgHumidity = (rackData.filter((r) => r.humidity).reduce((sum, r) => sum + (r.humidity ?? 0), 0) / rackData.filter((r) => r.humidity).length).toFixed(0);
 
   const stats = [
-    { label: "Active Racks", value: totalRacks.toString(), icon: Server, color: "text-primary", clickable: false },
-    { label: "Avg Temperature", value: `${avgTemp}°C`, icon: Thermometer, color: "text-primary", clickable: false },
-    { label: "Avg Humidity", value: `${avgHumidity}%`, icon: Droplets, color: "text-accent", clickable: false },
-    { label: "Alerts", value: alertCount.toString(), icon: AlertTriangle, color: alertCount > 0 ? "text-destructive" : "text-success", clickable: alertCount > 0 },
+    { label: "Active Racks", value: totalRacks.toString(), icon: Server, color: "text-[#006738]", clickable: false },
+    { label: "Avg Temperature", value: `${avgTemp}°C`, icon: Thermometer, color: "text-[#006738]", clickable: false },
+    { label: "Avg Humidity", value: `${avgHumidity}%`, icon: Droplets, color: "text-[#006738]", clickable: false },
+    { label: "Alerts", value: alertCount.toString(), icon: AlertTriangle, color: alertCount > 0 ? "text-[#dc2626]" : "text-[#16a34a]", clickable: alertCount > 0 },
   ];
 
   return (

@@ -18,7 +18,7 @@ export default function SystemUsers() {
     <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h2 className="font-display text-lg font-bold text-foreground tracking-wider">System Users</h2>
-        <button className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-xs font-medium hover:bg-primary/90 transition-all">
+        <button className="flex items-center gap-2 bg-[#006738] text-primary-foreground px-4 py-2 rounded-lg text-xs font-medium hover:bg-[#006738]/90 transition-all">
           <UserPlus className="w-4 h-4" />
           Add User
         </button>
@@ -27,7 +27,7 @@ export default function SystemUsers() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-4 shadow-sm">
-          <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-primary">
+          <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-[#000000]">
             <Users className="w-5 h-5" />
           </div>
           <div>

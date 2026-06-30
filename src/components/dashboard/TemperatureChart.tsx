@@ -2,10 +2,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { temperatureHistory } from "@/data/sensorData";
 
 const coldLines = [
-  { key: "exadata", name: "Exadata", color: "hsl(348, 72%, 52%)" },
-  { key: "t24Old", name: "T24 OLD", color: "hsl(199, 80%, 48%)" },
-  { key: "t241", name: "T24-1", color: "hsl(152, 60%, 45%)" },
-  { key: "t242", name: "T24-2", color: "hsl(38, 92%, 50%)" },
+  { key: "serverRack1", name: "Server Rack 1", color: "hsl(348, 72%, 52%)" },
+  { key: "serverRack2", name: "Server Rack 2", color: "hsl(199, 80%, 48%)" },
 ];
 
 // Generate hot aisle history data
@@ -18,8 +16,8 @@ const hotAisleHistory = temperatureHistory.map((entry) => ({
 }));
 
 const hotLines = [
-  { key: "exadata", name: "Exadata", color: "hsl(0, 80%, 50%)" },
-  { key: "t24Old", name: "T24 OLD", color: "hsl(30, 90%, 50%)" },
+  { key: "serverRack1", name: "Server Rack 1", color: "hsl(0, 80%, 50%)" },
+  { key: "serverRack2", name: "Server Rack 2", color: "hsl(30, 90%, 50%)" },
   { key: "t241", name: "T24-1", color: "hsl(280, 60%, 55%)" },
   { key: "t242", name: "T24-2", color: "hsl(180, 60%, 45%)" },
 ];

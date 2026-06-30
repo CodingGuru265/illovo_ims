@@ -18,7 +18,6 @@ const categories = [
   { key: "all", label: "All Equipment" },
   { key: "server", label: "Server Racks", icon: Server },
   { key: "ups", label: "UPS Units", icon: Zap },
-  { key: "battery", label: "Battery Banks", icon: Battery },
 ] as const;
 
 export default function Index() {
@@ -47,44 +46,30 @@ export default function Index() {
             {/* Layout images */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-                <div className="bg-primary/10 px-4 py-2">
-                  <h3 className="font-display text-sm font-bold text-foreground tracking-wider">DATA CENTER LAYOUT</h3>
+                <div className="bg-[#006738]/10 px-4 py-2">
+                  <h3 className="font-display text-sm font-bold text-foreground text-center tracking-wider">DATA CENTER LAYOUT</h3>
                 </div>
                 <img src={datacenterLayout} alt="Data Center Layout" className="w-full h-64 object-cover" />
               </div>
               <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-                <div className="bg-primary/10 px-4 py-2">
-                  <h3 className="font-display text-sm font-bold text-foreground tracking-wider">POWER ROOM LAYOUT</h3>
+                <div className="bg-[#006738]/10 px-4 py-2">
+                  <h3 className="font-display text-sm font-bold text-foreground text-center tracking-wider">LIVE READINGS</h3>
+                </div>
+                  
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 px-2 py-2">
+                  {filtered.map((rack, i) => (
+                    <TemperatureCard key={rack.name} rack={rack} index={i} />
+                  ))}
+                </div>
+              </div>
+              {/*<div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+                <div className="bg-[#006738]/10 px-4 py-2">
+                  <h3 className="font-display text-sm font-bold text-foreground text-center tracking-wider">UPS ROOM LAYOUT</h3>
                 </div>
                 <img src={powerroomLayout} alt="Power Room Layout" className="w-full h-64 object-cover" />
-              </div>
+              </div>*/}
             </div>
 
-            {/* Filter tabs */}
-            <div className="flex items-center gap-2 flex-wrap">
-              {categories.map((cat) => (
-                <button
-                  key={cat.key}
-                  onClick={() => setFilter(cat.key)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium transition-all border ${
-                    filter === cat.key
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-card border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
-                  }`}
-                >
-                  {"icon" in cat && cat.icon && <cat.icon className="w-3.5 h-3.5" />}
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {filtered.map((rack, i) => (
-                <TemperatureCard key={rack.name} rack={rack} index={i} />
-              ))}
-            </div>
-
-            <TemperatureChart />
           </div>
         );
     }

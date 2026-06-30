@@ -16,7 +16,7 @@ export interface RackData {
 
 export const rackData: RackData[] = [
   {
-    name: "Exadata",
+    name: "Server Rack 1",
     category: "server",
     sensors: [
       { label: "Cold Aisle", temperature: 21.5, range: [17, 24] },
@@ -28,7 +28,7 @@ export const rackData: RackData[] = [
     humidity: 45,
   },
   {
-    name: "NBS T24 OLD",
+    name: "Server Rack 2",
     category: "server",
     sensors: [
       { label: "Cold Aisle", temperature: 23.4, range: [25, 43] },
@@ -38,146 +38,6 @@ export const rackData: RackData[] = [
     timestamp: "08:43 on 16-04-2026",
     status: "critical",
     humidity: 42,
-  },
-  {
-    name: "NBS T24-1",
-    category: "server",
-    sensors: [
-      { label: "Cold Aisle", temperature: 22.9, range: [17, 24] },
-      { label: "Hot Aisle", temperature: 37.4, range: [31, 38] },
-    ],
-    lastPosted: "2 minutes ago",
-    timestamp: "08:43 on 16-04-2026",
-    status: "normal",
-    humidity: 48,
-  },
-  {
-    name: "NBS T24-2",
-    category: "server",
-    sensors: [
-      { label: "Cold Aisle", temperature: 22.5, range: [25, 31] },
-      { label: "Hot Aisle", temperature: 29.8, range: [25, 31] },
-    ],
-    lastPosted: "2 minutes ago",
-    timestamp: "08:43 on 16-04-2026",
-    status: "normal",
-    humidity: 50,
-  },
-  {
-    name: "NBS Cyber Backup",
-    category: "server",
-    sensors: [
-      { label: "Cold Aisle", temperature: 18.8, range: [17, 24] },
-      { label: "Hot Aisle", temperature: 28.5, range: [25, 31] },
-    ],
-    lastPosted: "2 minutes ago",
-    timestamp: "08:43 on 16-04-2026",
-    status: "normal",
-    humidity: 52,
-  },
-  {
-    name: "NBS Coms. Rack",
-    category: "server",
-    sensors: [
-      { label: "Cold Aisle", temperature: 19.8, range: [17, 24] },
-      { label: "Hot Aisle", temperature: 20.3, range: [20, 27] },
-    ],
-    lastPosted: "2 minutes ago",
-    timestamp: "08:43 on 16-04-2026",
-    status: "normal",
-    humidity: 47,
-  },
-  {
-    name: "NICO Tech 1",
-    category: "server",
-    sensors: [
-      { label: "Cold Aisle", temperature: 18.0, range: [17, 24] },
-      { label: "Hot Aisle", temperature: 24.5, range: [23, 29] },
-    ],
-    lastPosted: "2 minutes ago",
-    timestamp: "08:43 on 16-04-2026",
-    status: "normal",
-    humidity: 44,
-  },
-  {
-    name: "NICO Tech 2",
-    category: "server",
-    sensors: [
-      { label: "Cold Aisle", temperature: 17.6, range: [15, 23] },
-      { label: "Hot Aisle", temperature: 23.0, range: [20, 27] },
-    ],
-    lastPosted: "2 minutes ago",
-    timestamp: "08:43 on 16-04-2026",
-    status: "normal",
-    humidity: 46,
-  },
-  {
-    name: "UPS 1",
-    category: "ups",
-    sensors: [
-      { label: "Front Panel", temperature: 17.8, range: [25, 28] },
-      { label: "Back Panel", temperature: 22.3, range: [25, 28] },
-    ],
-    lastPosted: "6 hours ago",
-    timestamp: "01:58 on 16-04-2026",
-    status: "normal",
-    humidity: 40,
-  },
-  {
-    name: "UPS 2",
-    category: "ups",
-    sensors: [
-      { label: "Front Panel", temperature: 18.5, range: [25, 28] },
-      { label: "Back Panel", temperature: 22.8, range: [25, 28] },
-    ],
-    lastPosted: "6 hours ago",
-    timestamp: "01:58 on 16-04-2026",
-    status: "normal",
-    humidity: 41,
-  },
-  {
-    name: "Battery Bank 1",
-    category: "battery",
-    sensors: [
-      { label: "Front Panel", temperature: 17.9, range: [25, 28] },
-    ],
-    lastPosted: "6 hours ago",
-    timestamp: "01:58 on 16-04-2026",
-    status: "normal",
-    humidity: 38,
-  },
-  {
-    name: "Battery Bank 2",
-    category: "battery",
-    sensors: [
-      { label: "Front Panel", temperature: 17.4, range: [25, 28] },
-    ],
-    lastPosted: "6 hours ago",
-    timestamp: "01:58 on 16-04-2026",
-    status: "normal",
-    humidity: 39,
-  },
-  {
-    name: "Battery Bank 3",
-    category: "battery",
-    sensors: [
-      { label: "Front Panel", temperature: 14.9, range: [25, 28] },
-    ],
-    lastPosted: "6 hours ago",
-    timestamp: "01:58 on 16-04-2026",
-    status: "normal",
-    humidity: 37,
-  },
-  {
-    name: "Battery Bank 4",
-    category: "battery",
-    sensors: [
-      { label: "Front Panel", temperature: 17.6, range: [25, 28] },
-    ],
-    lastPosted: "6 hours ago",
-    timestamp: "01:58 on 16-04-2026",
-    status: "normal",
-    humidity: 40,
   },
 ];
 

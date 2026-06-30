@@ -4,7 +4,7 @@ import {
   ChevronDown, ChevronRight, Thermometer, LayoutDashboard,
   Menu, X
 } from "lucide-react";
-import nbsLogo from "@/assets/nbs-logo.png";
+import nbsLogo from "@/assets/illovo-logo-white.png";
 
 interface NavItem {
   label: string;
@@ -23,7 +23,7 @@ const navItems: NavItem[] = [
       { label: "Reports", icon: <BarChart3 className="w-4 h-4" />, id: "env-reports" },
     ],
   },
-  {
+  /*{
     label: "Power State",
     icon: <Zap className="w-4 h-4" />,
     id: "power",
@@ -31,7 +31,7 @@ const navItems: NavItem[] = [
       { label: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, id: "power-dashboard" },
       { label: "Reports", icon: <BarChart3 className="w-4 h-4" />, id: "power-reports" },
     ],
-  },
+  },*/
   {
     label: "System Users",
     icon: <Users className="w-4 h-4" />,
@@ -40,11 +40,11 @@ const navItems: NavItem[] = [
       { label: "All Users", icon: <Users className="w-4 h-4" />, id: "all-users" },
     ],
   },
-  {
+  /*{
     label: "Battery Trends",
     icon: <Battery className="w-4 h-4" />,
     id: "battery",
-  },
+  },*/
 ];
 
 interface SidebarProps {
@@ -64,14 +64,14 @@ export default function Sidebar({ activeItem, onItemClick }: SidebarProps) {
     <div className="flex flex-col h-full">
       {/* Logo area */}
       <div className="p-4 border-b border-border">
-        <div className="flex items-center gap-3">
-          <img src={nbsLogo} alt="NBS Bank" className="w-16 h-16 object-contain" />
+        <div className="flex items-center gap-3 justify-center px-3 py-2">
+          <img src={nbsLogo} alt="NBS Bank" className="w-32 h-16 object-contain" />
         </div>
       </div>
 
       {/* User badge */}
       <div className="px-4 py-3">
-        <div className="bg-primary text-primary-foreground rounded-lg px-3 py-2">
+        <div className="bg-[#006738] text-primary-foreground rounded-lg px-3 py-2">
           <p className="text-xs font-medium">Yankho Nkoloma</p>
           <p className="text-[10px] opacity-80">System Administrator</p>
         </div>
@@ -84,7 +84,7 @@ export default function Sidebar({ activeItem, onItemClick }: SidebarProps) {
             <button
               onClick={() => item.children ? toggleExpand(item.id) : onItemClick(item.id)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-all
-                ${activeItem === item.id ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
+                ${activeItem === item.id ? "bg-[#006738]/15 text-[#006738]" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
             >
               {item.icon}
               <span className="flex-1 text-left">{item.label}</span>
@@ -99,7 +99,7 @@ export default function Sidebar({ activeItem, onItemClick }: SidebarProps) {
                     key={child.id}
                     onClick={() => { onItemClick(child.id); setMobileOpen(false); }}
                     className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs transition-all
-                      ${activeItem === child.id ? "bg-primary/15 text-primary font-medium" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
+                      ${activeItem === child.id ? "bg-[#006738]/15 text-[#006738] font-medium" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
                   >
                     {child.icon}
                     {child.label}

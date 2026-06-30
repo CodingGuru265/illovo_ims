@@ -8,8 +8,10 @@ import {
 } from "recharts";
 
 function getTempStatus(temp: number, range: [number, number]): "normal" | "warning" | "critical" {
-  if (temp < range[0] * 0.9 || temp > range[1] * 1.1) return "critical";
-  if (temp < range[0] || temp > range[1]) return "warning";
+  //if (temp < range[0] * 0.9 || temp > range[1] * 1.1) return "critical";
+  //if (temp < range[0] || temp > range[1]) return "warning";
+  if ( temp > range[1] * 1.1) return "critical";
+  if ( temp > range[1]) return "warning";
   return "normal";
 }
 
@@ -38,7 +40,8 @@ function rangeBgColor(status: string) {
 }
 
 function isOutOfRange(temp: number, range: [number, number]) {
-  return temp < range[0] || temp > range[1];
+  //return temp < range[0] || temp > range[1];
+  return temp > range[1];
 }
 
 // Generate 30 mock records for modal
@@ -67,14 +70,14 @@ export default function TemperatureCard({ rack, index }: Props) {
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y:20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05, duration: 0.4 }}
         className={`bg-card border border-border rounded-xl overflow-hidden shadow-sm ${hasOutOfRange ? "animate-glow-pulse" : ""}`}
       >
         {/* Header */}
-        <div className="bg-primary px-4 py-3">
-          <h3 className="font-display text-sm font-semibold text-primary-foreground tracking-wide text-center">{rack.name}</h3>
+        <div className="bg-[#006738]/90 px-4 py-3">
+          <h3 className="font-display text-sm font-semibold text-[#ffffff] tracking-wide text-center">{rack.name}</h3>
         </div>
 
         {/* Sensors */}
