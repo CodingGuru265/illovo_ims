@@ -86,8 +86,9 @@ export default function TemperatureCard({ rack, index }: Props) {
               return (
                 <div
                   key={sensor.label}
-                  onClick={() => setModalSensor(sensor)}
-                  className={`rounded-xl border-2 p-3 text-center cursor-pointer hover:shadow-md transition-shadow ${sensorBorderColor(sStatus)} ${outOfRange ? "animate-glow-pulse" : ""}`}
+                  /* Modal trigger disabled for now */
+                  /* onClick={() => setModalSensor(sensor)} */
+                  className={`rounded-xl border-2 p-3 text-center transition-shadow ${sensorBorderColor(sStatus)} ${outOfRange ? "animate-glow-pulse" : ""}`}
                 >
                   <p className={`text-[11px] font-semibold ${sensorTextColor(sStatus)}`}>
                     {sensor.label}
