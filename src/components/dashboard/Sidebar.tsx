@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { 
-  Server, BarChart3, Users, Battery, Zap, LogOut, 
+import {
+  Server, BarChart3, Users, Battery, Zap, LogOut,
   ChevronDown, ChevronRight, Thermometer, LayoutDashboard,
   Menu, X
 } from "lucide-react";
 import nbsLogo from "@/assets/illovo-logo-white.png";
+import { useAuth } from "@/context/AuthContext";
 
 interface NavItem {
   label: string;
@@ -55,6 +56,11 @@ interface SidebarProps {
 export default function Sidebar({ activeItem, onItemClick }: SidebarProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({ env: true });
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const toggleExpand = (id: string) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -72,8 +78,8 @@ export default function Sidebar({ activeItem, onItemClick }: SidebarProps) {
       {/* User badge */}
       <div className="px-4 py-3">
         <div className="bg-[#006738] text-primary-foreground rounded-lg px-3 py-2">
-          <p className="text-xs font-medium">Yankho Nkoloma</p>
-          <p className="text-[10px] opacity-80">System Administrator</p>
+          <p className="text-xs font-medium">{user?.name ?? "User"}</p>
+          <p className="text-[10px] opacity-80">{user?.role ?? "User"}</p>
         </div>
       </div>
 
@@ -113,7 +119,10 @@ export default function Sidebar({ activeItem, onItemClick }: SidebarProps) {
 
       {/* Logout */}
       <div className="p-3 border-t border-border">
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all"
+        >
           <LogOut className="w-4 h-4" />
           Logout
         </button>

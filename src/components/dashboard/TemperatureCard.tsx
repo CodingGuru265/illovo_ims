@@ -8,10 +8,8 @@ import {
 } from "recharts";
 
 function getTempStatus(temp: number, range: [number, number]): "normal" | "warning" | "critical" {
-  //if (temp < range[0] * 0.9 || temp > range[1] * 1.1) return "critical";
-  //if (temp < range[0] || temp > range[1]) return "warning";
-  if ( temp > range[1] * 1.1) return "critical";
-  if ( temp > range[1]) return "warning";
+  if (temp > range[1] * 1.1 || temp < range[0] * 0.9) return "critical";
+  if (temp > range[1] || temp < range[0]) return "warning";
   return "normal";
 }
 
@@ -40,8 +38,7 @@ function rangeBgColor(status: string) {
 }
 
 function isOutOfRange(temp: number, range: [number, number]) {
-  //return temp < range[0] || temp > range[1];
-  return temp > range[1];
+  return temp < range[0] || temp > range[1];
 }
 
 // Generate 30 mock records for modal
@@ -112,7 +109,7 @@ export default function TemperatureCard({ rack, index }: Props) {
               <Clock className="w-3 h-3" />
               <span className="text-[10px]">Last Posted: {rack.lastPosted}</span>
             </div>
-            <p className="text-[10px] text-muted-foreground">Timestamp: {rack.timestamp}</p>
+            {/* <p className="text-[10px] text-muted-foreground">Timestamp: {rack.timestamp}</p> */}
           </div>
         </div>
       </motion.div>

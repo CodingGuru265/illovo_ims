@@ -71,12 +71,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const res = await fetch(`${API_BASE}/auth/me`, {
+        const res = await fetch(`${API_BASE}/illovo/auth/me`, {
           method: 'GET',
           headers: getAuthHeaders(),
         });
 
         if (!res.ok) {
+          console.warn('Session check failed with status:', res.status);
           clearStoredToken();
           setUser(null);
           return;
@@ -88,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (sessionUser) {
           setUser(sessionUser);
         } else {
+          console.warn('Session check returned no user:', data);
           clearStoredToken();
           setUser(null);
         }
@@ -108,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * --------------------------------------------- */
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
+      const res = await fetch(`${API_BASE}/illovo/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -163,7 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * --------------------------------------------- */
   const register = async (email: string, password: string, name: string) => {
     try {
-      const res = await fetch(`${API_BASE}/auth/register`, {
+      const res = await fetch(`${API_BASE}/illovo/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -191,7 +193,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * --------------------------------------------- */
   const logout = async () => {
     try {
-      await fetch(`${API_BASE}/auth/logout`, {
+      await fetch(`${API_BASE}/illovo/auth/logout`, {
         method: 'POST',
         headers: getAuthHeaders(),
       });

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 /*import Sidebar from "@/components/dashboard/Sidebar";*/
 import AppLayout from "@/components/layout/AppLayout";
 import StatsBar from "@/components/dashboard/StatsBar";
 import TemperatureCard from "@/components/dashboard/TemperatureCard";
 import TemperatureChart from "@/components/dashboard/TemperatureChart";
-import { rackData } from "@/data/sensorData";
+import { rackData as defaultRackData, type RackData } from "@/data/sensorData";
+import { api, type DashboardData } from "@/lib/api";
 import { Server, Zap, Battery } from "lucide-react";
 import datacenterLayout from "@/assets/datacenter-layout.jpg";
 import powerroomLayout from "@/assets/powerroom-layout.jpg";
@@ -20,11 +21,90 @@ const categories = [
   { key: "ups", label: "UPS Units", icon: Zap },
 ] as const;
 
+function mapDashboardToRacks(data: DashboardData): RackData[] {
+  const timestamp = data.last_posted_data ?? "--";
+
+  const buildRack = (
+    name: string,
+    defaultRack: RackData,
+    coldTemp: number | null,
+    hotTemp: number | null,
+    coldHumi: number | null,
+    hotHumi: number | null,
+    lowerThreshold: number | null,
+    upperThreshold: number | null
+  ): RackData => {
+    const defaultCold = defaultRack.sensors.find((s) => s.label === "Cold Aisle")?.temperature ?? 0;
+    const defaultHot = defaultRack.sensors.find((s) => s.label === "Hot Aisle")?.temperature ?? 0;
+    const defaultColdRange = defaultRack.sensors.find((s) => s.label === "Cold Aisle")?.range ?? [17, 24];
+    const defaultHotRange = defaultRack.sensors.find((s) => s.label === "Hot Aisle")?.range ?? [35, 43];
+    const defaultHumidity = defaultRack.humidity ?? 0;
+
+    const hasApiThresholds = lowerThreshold !== null && upperThreshold !== null;
+    const coldRange: [number, number] = hasApiThresholds
+      ? [lowerThreshold, upperThreshold]
+      : defaultColdRange;
+    const hotRange: [number, number] = hasApiThresholds
+      ? [lowerThreshold, upperThreshold]
+      : defaultHotRange;
+
+    return {
+      ...defaultRack,
+      name,
+      sensors: [
+        { label: "Cold Aisle", temperature: coldTemp ?? defaultCold, range: coldRange },
+        { label: "Hot Aisle", temperature: hotTemp ?? defaultHot, range: hotRange },
+      ],
+      humidity: coldHumi ?? hotHumi ?? defaultHumidity,
+      lastPosted: timestamp,
+      timestamp,
+    };
+  };
+
+  return [
+    buildRack(
+      "Server Rack 1",
+      defaultRackData[0],
+      data.server_rack_1_temp_cold_aisle,
+      data.server_rack_1_temp_hot_aisle,
+      data.server_rack_1_humi_cold_aisle,
+      data.server_rack_1_humi_hot_aisle,
+      data.server_rack_1_temp_lower_threshold,
+      data.server_rack_1_temp_upper_threshold
+    ),
+    buildRack(
+      "Server Rack 2",
+      defaultRackData[1],
+      data.server_rack_2_temp_cold_aisle,
+      data.server_rack_2_temp_hot_aisle,
+      data.server_rack_2_humi_cold_aisle,
+      data.server_rack_2_humi_hot_aisle,
+      data.server_rack_2_temp_lower_threshold,
+      data.server_rack_2_temp_upper_threshold
+    ),
+  ];
+}
+
 export default function Index() {
   const [activeNav, setActiveNav] = useState("env-dashboard");
   const [filter, setFilter] = useState<string>("all");
+  const [racks, setRacks] = useState<RackData[]>(defaultRackData);
 
-  const filtered = filter === "all" ? rackData : rackData.filter((r) => r.category === filter);
+  useEffect(() => {
+    let mounted = true;
+
+    api.getDashboard().then((data) => {
+      if (mounted && data) {
+        setRacks(mapDashboardToRacks(data));
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const filtered = filter === "all" ? racks : racks.filter((r) => r.category === filter);
 
   const renderContent = () => {
     switch (activeNav) {
@@ -41,7 +121,7 @@ export default function Index() {
       default:
         return (
           <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
-            <StatsBar />
+            <StatsBar racks={racks} />
 
             {/* Layout images */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

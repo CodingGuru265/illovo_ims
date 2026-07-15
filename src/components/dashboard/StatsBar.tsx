@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { Thermometer, AlertTriangle, Server, Droplets, X } from "lucide-react";
-import { rackData } from "@/data/sensorData";
+import type { RackData } from "@/data/sensorData";
 
-export default function StatsBar() {
+interface StatsBarProps {
+  racks: RackData[];
+}
+
+export default function StatsBar({ racks }: StatsBarProps) {
   const [showAlerts, setShowAlerts] = useState(false);
 
-  const totalRacks = rackData.length;
-  const allSensors = rackData.flatMap((r) => r.sensors.map((s) => ({ rack: r.name, ...s })));
+  const totalRacks = racks.length;
+  const allSensors = racks.flatMap((r) => r.sensors.map((s) => ({ rack: r.name, ...s })));
   const outOfRangeSensors = allSensors.filter((s) => s.temperature < s.range[0] || s.temperature > s.range[1]);
   const alertCount = outOfRangeSensors.length;
   const avgTemp = (allSensors.reduce((sum, s) => sum + s.temperature, 0) / allSensors.length).toFixed(1);
-  const avgHumidity = (rackData.filter((r) => r.humidity).reduce((sum, r) => sum + (r.humidity ?? 0), 0) / rackData.filter((r) => r.humidity).length).toFixed(0);
+  const avgHumidity = (racks.filter((r) => r.humidity).reduce((sum, r) => sum + (r.humidity ?? 0), 0) / racks.filter((r) => r.humidity).length).toFixed(0);
 
   const stats = [
     { label: "Active Racks", value: totalRacks.toString(), icon: Server, color: "text-[#006738]", clickable: false },
