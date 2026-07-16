@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 1293,
+    allowedHosts: ["illovo.iot.mw"],
     hmr: {
       overlay: false,
     },
@@ -15,6 +16,7 @@ export default defineConfig(({ mode }) => ({
   preview: {
     host: "::",
     port: 1290,
+    allowedHosts: ["illovo.iot.mw"],
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
