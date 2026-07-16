@@ -71,14 +71,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const res = await fetch(`${API_BASE}/illovo/auth/me`, {
+        const url = `${API_BASE}/illovo/auth/me`;
+        console.log('[Auth] Validating session at:', url);
+
+        const res = await fetch(url, {
           method: 'GET',
           headers: getAuthHeaders(),
         });
 
         if (!res.ok) {
-          console.warn('Session check failed with status:', res.status);
-          clearStoredToken();
+          console.warn('[Auth] Session check failed with status:', res.status, res.statusText);
+
+          // Only clear the token if the server explicitly rejected it (401).
+          // Other failures (CORS, 500, network) should not destroy a potentially valid session.
+          if (res.status === 401) {
+            clearStoredToken();
+          }
           setUser(null);
           return;
         }
@@ -87,15 +95,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const sessionUser = extractUser(data);
 
         if (sessionUser) {
+          console.log('[Auth] Session restored for:', sessionUser.name ?? sessionUser.email);
           setUser(sessionUser);
         } else {
-          console.warn('Session check returned no user:', data);
+          console.warn('[Auth] Session check returned no user:', data);
           clearStoredToken();
           setUser(null);
         }
       } catch (error) {
-        console.error('Session check failed:', error);
-        clearStoredToken();
+        console.error('[Auth] Session check network/error:', error);
+        // Don't clear token on network/CORS errors; the token may still be valid.
         setUser(null);
       } finally {
         setLoading(false);
@@ -136,7 +145,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.status === 'success') {
-        const token = data?.data?.access_token;
+        //const token = data?.data?.access_token;
+        const token = data?.access_token;
 
         if (!token) {
           return {
