@@ -49,9 +49,48 @@ const getAuthHeaders = () => {
 };
 
 
-// Helper to extract user from Laravel's APIResponse shape:
-// { status, message, data: { ... } } or fallback { user: { ... } }
-const extractUser = (data: any) => data?.data ?? data?.user ?? null;
+// Helper to extract the user object from a few common response shapes:
+// { status, data: { id, name, role } }
+// { status, user: { id, name, role } }
+// { id, name, role } (user returned directly)
+const isUserLike = (value: unknown): value is Record<string, unknown> =>
+  value !== null &&
+  typeof value === 'object' &&
+  'id' in value &&
+  'name' in value;
+
+const extractUser = (data: unknown): Record<string, unknown> | null => {
+  if (!data || typeof data !== 'object') return null;
+
+  const candidate =
+    ('data' in data && data.data) || ('user' in data && data.user) || null;
+
+  if (isUserLike(candidate)) {
+    return candidate;
+  }
+
+  // Some backends return the user object at the top level of the response.
+  if (isUserLike(data)) {
+    return data;
+  }
+
+  return null;
+};
+
+// Helper to extract the access token whether it is at the top level
+// or nested inside a `data` object.
+const extractAccessToken = (data: unknown): string | null => {
+  if (!data || typeof data !== 'object') return null;
+
+  const topLevel = 'access_token' in data ? data.access_token : null;
+  if (typeof topLevel === 'string') return topLevel;
+
+  const nested = 'data' in data && data.data && typeof data.data === 'object'
+    ? (data.data as Record<string, unknown>).access_token
+    : null;
+
+  return typeof nested === 'string' ? nested : null;
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -77,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const res = await fetch(url, {
           method: 'GET',
           headers: getAuthHeaders(),
+          credentials: 'include',
         });
 
         if (!res.ok) {
@@ -145,8 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.status === 'success') {
-        //const token = data?.data?.access_token;
-        const token = data?.access_token;
+        const token = extractAccessToken(data);
 
         if (!token) {
           return {
@@ -206,6 +245,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await fetch(`${API_BASE}/illovo/auth/logout`, {
         method: 'POST',
         headers: getAuthHeaders(),
+        credentials: 'include',
       });
     } catch {
       // Logout failed silently — clear user regardless

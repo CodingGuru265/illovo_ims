@@ -132,6 +132,16 @@ export const getAuthHeaders = (): HeadersInit => {
   };
 };
 
+// Shared request options so authenticated calls always send the session cookie.
+const authRequestInit = (method: string, extraHeaders: HeadersInit = {}): RequestInit => ({
+  method,
+  headers: {
+    ...getAuthHeaders(),
+    ...extraHeaders,
+  },
+  credentials: 'include',
+});
+
 // ============================================================================
 // API IMPLEMENTATION
 // ============================================================================
@@ -147,24 +157,52 @@ export const api = {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
       const result: ApiResponse<LoginResponseData> = await response.json();
 
-      if (!response.ok || result.status !== 'success' || !result.data) {
+      if (!response.ok || result.status !== 'success') {
         return {
           success: false,
           error: result.msg || result.message || 'Login failed.',
         };
       }
 
-      const { id, name, role, access_token, session_token } = result.data;
+      // The backend may return the token/user either at the top level or
+      // nested inside a `data` object. Handle both shapes gracefully.
+      const payload = result.data ?? result;
+      const access_token =
+        typeof payload?.access_token === 'string'
+          ? payload.access_token
+          : null;
+      const session_token =
+        typeof payload?.session_token === 'string'
+          ? payload.session_token
+          : undefined;
+
+      const rawUser =
+        payload && typeof payload === 'object'
+          ? (payload.user ?? payload)
+          : null;
+
+      const userObj =
+        rawUser && typeof rawUser === 'object' && 'id' in rawUser && 'name' in rawUser
+          ? (rawUser as LoginResponseData)
+          : null;
+
+      if (!access_token || !userObj) {
+        return {
+          success: false,
+          error: 'Login succeeded but no access token or user was returned.',
+        };
+      }
 
       const user: User = {
-        id,
-        name,
-        role,
+        id: userObj.id,
+        name: userObj.name,
+        role: userObj.role ?? 'User',
       };
 
       authStorage.setToken(access_token);
@@ -185,19 +223,20 @@ export const api = {
 
   async getCurrentUser(): Promise<User | null> {
     try {
-      const response = await fetch(`${API_BASE}/illovo/auth/me`, {
-        method: 'GET',
-        headers: getAuthHeaders(),
-      });
+      const response = await fetch(`${API_BASE}/illovo/auth/me`, authRequestInit('GET'));
 
       if (!response.ok) {
-        authStorage.clearToken();
+        // Only clear the token if the server explicitly rejected it (401).
+        // Network/CORS/500 errors should not destroy a potentially valid session.
+        if (response.status === 401) {
+          authStorage.clearToken();
+        }
         return null;
       }
 
       const result = await response.json();
 
-      const user = result?.data ?? result?.user ?? null;
+      const user = result?.data ?? result?.user ?? (result?.id && result?.name ? result : null);
 
       if (!user) {
         authStorage.clearToken();
@@ -210,17 +249,14 @@ export const api = {
         role: user.role ?? 'User',
       };
     } catch {
-      authStorage.clearToken();
+      // Don't clear the token on network errors; the session may still be valid.
       return null;
     }
   },
 
   async logout(): Promise<void> {
     try {
-      await fetch(`${API_BASE}/illovo/auth/logout`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-      });
+      await fetch(`${API_BASE}/illovo/auth/logout`, authRequestInit('POST'));
     } finally {
       authStorage.clearToken();
     }
@@ -228,10 +264,7 @@ export const api = {
 
   async getDashboard(): Promise<DashboardData | null> {
     try {
-      const response = await fetch(`${API_BASE}/illovo/dashboard`, {
-        method: 'GET',
-        headers: getAuthHeaders(),
-      });
+      const response = await fetch(`${API_BASE}/illovo/dashboard`, authRequestInit('GET'));
 
       if (!response.ok) {
         console.error('Dashboard API returned status:', response.status);
@@ -248,10 +281,7 @@ export const api = {
 
   async getUsers(): Promise<UserApiItem[]> {
     try {
-      const response = await fetch(`${API_BASE}/illovo/users`, {
-        method: 'GET',
-        headers: getAuthHeaders(),
-      });
+      const response = await fetch(`${API_BASE}/illovo/users`, authRequestInit('GET'));
 
       if (!response.ok) {
         console.error('Users API returned status:', response.status);
@@ -268,14 +298,12 @@ export const api = {
 
   async createUser(payload: CreateUserPayload): Promise<CreateUserResult> {
     try {
-      const response = await fetch(`${API_BASE}/illovo/users`, {
-        method: 'POST',
-        headers: {
-          ...getAuthHeaders(),
-          'Content-Type': 'application/json',
-        },
+      const requestWithBody: RequestInit = {
+        ...authRequestInit('POST', { 'Content-Type': 'application/json' }),
         body: JSON.stringify(payload),
-      });
+      };
+
+      const response = await fetch(`${API_BASE}/illovo/users`, requestWithBody);
 
       const result: ApiResponse<UserApiItem> = await response.json();
 
@@ -307,10 +335,7 @@ export const api = {
         to_date: params.to_date,
       });
 
-      const response = await fetch(`${API_BASE}/illovo/reports?${query.toString()}`, {
-        method: 'GET',
-        headers: getAuthHeaders(),
-      });
+      const response = await fetch(`${API_BASE}/illovo/reports?${query.toString()}`, authRequestInit('GET'));
 
       if (!response.ok) {
         console.error('Reports API returned status:', response.status);
