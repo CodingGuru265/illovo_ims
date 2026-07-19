@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { rackData } from "@/data/sensorData";
-import { Loader2 } from "lucide-react";
+import { Loader2, Download } from "lucide-react";
 import { api, type ReportsResponse } from "@/lib/api";
+import { exportToCSV } from "@/lib/utils";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend, ReferenceLine,
@@ -44,6 +45,28 @@ export default function EnvironmentalReports() {
     }
     setLoading(false);
   }, [selectedRack, selectedAisle, fromDate, toDate]);
+
+  const baseFileName = `${selectedRack.replace(/\s+/g, "_")}_${selectedAisle.replace(/\s+/g, "_")}_${fromDate}_to_${toDate}`;
+
+  const exportTemperature = () => {
+    exportToCSV(
+      `${baseFileName}_temperature.csv`,
+      reportData.map((row) => ({
+        time: row.time,
+        temperature: row.temperature,
+      }))
+    );
+  };
+
+  const exportHumidity = () => {
+    exportToCSV(
+      `${baseFileName}_humidity.csv`,
+      reportData.map((row) => ({
+        time: row.time,
+        humidity: row.humidity,
+      }))
+    );
+  };
 
   useEffect(() => {
     loadReports();
@@ -122,7 +145,12 @@ export default function EnvironmentalReports() {
           <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
             <div className="flex items-center gap-3 px-5 py-3 border-b border-border">
               <span className="text-sm font-medium text-foreground">Temperature Trends</span>
-              <button className="bg-[hsl(220,60%,35%)] text-white px-3 py-1 rounded text-xs font-medium">
+              <button
+                onClick={exportTemperature}
+                disabled={reportData.length === 0}
+                className="bg-[hsl(220,60%,35%)] text-white px-3 py-1 rounded text-xs font-medium inline-flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[hsl(220,60%,30%)] transition-colors"
+              >
+                <Download className="w-3 h-3" />
                 Export
               </button>
             </div>
@@ -154,7 +182,12 @@ export default function EnvironmentalReports() {
           <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
             <div className="flex items-center gap-3 px-5 py-3 border-b border-border">
               <span className="text-sm font-medium text-foreground">Humidity Trends</span>
-              <button className="bg-[hsl(220,60%,35%)] text-white px-3 py-1 rounded text-xs font-medium">
+              <button
+                onClick={exportHumidity}
+                disabled={reportData.length === 0}
+                className="bg-[hsl(220,60%,35%)] text-white px-3 py-1 rounded text-xs font-medium inline-flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[hsl(220,60%,30%)] transition-colors"
+              >
+                <Download className="w-3 h-3" />
                 Export
               </button>
             </div>
