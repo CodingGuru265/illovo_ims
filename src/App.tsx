@@ -49,11 +49,11 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => {
-  // Auto-refresh the dashboard every 2.5 minutes
+  // Auto-refresh the dashboard every 3 minutes
   useEffect(() => {
     const interval = setInterval(() => {
       window.location.reload();
-    }, 150000); // 2.5 minutes
+    }, 180000); // 3 minutes
 
     return () => clearInterval(interval);
   }, []);

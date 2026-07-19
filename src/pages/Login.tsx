@@ -124,7 +124,7 @@ export default function Login() {
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
-                    placeholder="name@illovo.com"
+                    placeholder="Enter your email"
                     type="email"
                     autoCapitalize="none"
                     disabled={loading}
